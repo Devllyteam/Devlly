@@ -18,7 +18,7 @@ export function NavBar() {
             GIG
           </Link>
           <Link href="/spotlight" className="">
-            Spotlight
+          Pitchroom
           </Link>
         </div>
       </div>

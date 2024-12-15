@@ -1,6 +1,6 @@
 import StackedCircularFooter from "@/components/footer";
 import { NavBar } from "@/components/navbar";
-import { UsernameForm } from "@/components/username-form";
+import  {UsernameForm}  from "@/components/username-form";
 import React from "react";
 
 const page = () => {

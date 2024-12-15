@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { joinWaitlist } from "@/app/actions/joinwaitlist";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import Image from "next/image";
 
 export function UsernameForm() {
@@ -14,6 +14,7 @@ export function UsernameForm() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [rateLimitRemaining, setRateLimitRemaining] = useState(5);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +38,7 @@ export function UsernameForm() {
       });
     }
 
+    setRateLimitRemaining(result.rateLimitRemaining ?? 0);
     setIsLoading(false);
   };
 
@@ -81,15 +83,19 @@ export function UsernameForm() {
             required
           />
         </div>
-        <Button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-base font-medium"
-          disabled={isLoading}
-        >
-          {isLoading ? "Joining..." : "Join the Waitlist"}
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="space-y-6">
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-base font-medium"
+            disabled={isLoading || rateLimitRemaining === 0}
+          >
+            {isLoading ? "Joining..." : "Join the Waitlist"}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+         
+        </div>
       </form>
     </div>
   );
 }
+
