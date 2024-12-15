@@ -10,7 +10,7 @@ import { headers } from "next/headers";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 if (!process.env.RESEND_API_KEY) {
-  console.warn("RESEND_API_KEY is not set. Email functionality will not work.");
+  console.error("RESEND_API_KEY is not set. Email functionality will not work.");
 }
 
 // In-memory store for rate limiting
@@ -91,30 +91,30 @@ export async function joinWaitlist(formData: FormData) {
     });
 
     const toEmail =
-      process.env.NODE_ENV === "production" ? email : process.env.EMAIL;
+      process.env.NODE_ENV === "production" ? email : email;
 
     if (!toEmail) {
       throw new Error("Recipient email is not set");
     }
 
-    // Prepare email payload
-    const emailPayload = {
-      from: "Devlly <onboarding@resend.dev>",
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not set");
+    }
+
+    const emailResult = await resend.emails.send({
+      from: 'waitlist@devlly.arihant.us',
       to: toEmail,
-      subject: "Welcome to the Devlly Waitlist!",
+      subject: 'Welcome to the Devlly Waitlist!',
       html: `
         <h1>Welcome to Devlly, ${username}!</h1>
         <p>Thank you for joining our waitlist. We'll keep you updated on our launch and any exciting news!</p>
         <p>Your reserved username: ${username}</p>
       `,
-    };
-
-    // Send confirmation email
-    const emailResult = await resend.emails.send(emailPayload);
+    });
 
     if (emailResult.error) {
-      console.error("Email sending error:", emailResult.error);
-      throw new Error("Failed to send email");
+      console.error('Email sending error:', emailResult.error);
+      throw new Error('Failed to send email');
     }
 
     // Revalidate the waitlist page
@@ -130,7 +130,7 @@ export async function joinWaitlist(formData: FormData) {
     console.error("Error in joinWaitlist:", error);
     return {
       success: false,
-      error: "An error occurred. Please try again later.",
+      error: error instanceof Error ? error.message : "An error occurred. Please try again later.",
       rateLimitRemaining,
     };
   }
