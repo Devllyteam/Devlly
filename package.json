@@ -2,10 +2,11 @@
   "name": "devlly",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo build && prisma generate",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate": "prisma generate"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
