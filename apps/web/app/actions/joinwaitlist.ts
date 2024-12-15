@@ -104,7 +104,7 @@ export async function joinWaitlist(formData: FormData) {
       subject: "Welcome to the Devlly Waitlist!",
       html: `
         <h1>Welcome to Devlly, ${username}!</h1>
-        <p>Thank you for joining our waitlist. We'll keep you updated on our launch and any exciting news you will recive mail on ${email} !</p>
+        <p>Thank you for joining our waitlist. We'll keep you updated on our launch and any exciting news!</p>
         <p>Your reserved username: ${username}</p>
       `,
     };
